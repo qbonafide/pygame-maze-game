@@ -35,7 +35,7 @@ class Enemy:
         self.pathfinder: Optional[AStar] = None
         self.path: List[Tuple[int, int]] = []
         self.path_index = 0
-        self.recalc_interval = 3
+        self.recalc_interval = 1
         self.moves_since_recalc = 0
         
         # Vision/detection

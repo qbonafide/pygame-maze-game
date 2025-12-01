@@ -53,7 +53,8 @@ class Game:
     def _spawn_enemies(self) -> list:
         """Spawn enemies at random locations far from player."""
         enemies = []
-        speeds = [0.5, 0.5]
+        spawn_count = 2
+        speeds = [1.0] * spawn_count
         
         for i, speed in enumerate(speeds):
             while True:
