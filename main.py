@@ -103,10 +103,10 @@ class Game:
         try:
             path_texture = pygame.image.load("assets/textures/background.png")
             path_texture = pygame. transform. scale(path_texture, (TILE_SIZE, TILE_SIZE))
-            print("✓ Path texture loaded successfully!")
+            print(" Path texture loaded successfully!")
             return path_texture
         except pygame. error as e:
-            print(f"⚠ Warning: Could not load path texture: {e}")
+            print(f" Warning: Could not load path texture: {e}")
             fallback = pygame. Surface((TILE_SIZE, TILE_SIZE))
             fallback.fill(COLOR_WHITE)
             return fallback
@@ -156,7 +156,7 @@ class Game:
             # Check if enemy is adjacent to player
             if enemy_pos in adjacent_positions:
                 enemy.hit()
-                print(f"💥 Hit enemy at {enemy_pos}!")
+                print(f" Hit enemy at {enemy_pos}!")
                 self.enemies_killed += 1
                 break
     
@@ -175,7 +175,7 @@ class Game:
                     # Respawn enemy
                     new_x, new_y = self._get_random_spawn_location()
                     enemy.reset_position(new_x, new_y)
-                    print(f"✓ Enemy respawned at ({new_x}, {new_y})")
+                    print(f" Enemy respawned at ({new_x}, {new_y})")
                 continue
             
             enemy.update(player_x, player_y, self.maze)
@@ -238,7 +238,7 @@ class Game:
             self.  screen.blit(kills_text, (10, 10))
         elif self.game_over:
             # Game over screen
-            over_text = self.font.render("💀 GAME OVER 💀", True, (255, 0, 0))
+            over_text = self.font.render(" GAME OVER ", True, (255, 0, 0))
             over_rect = over_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 40))
             self.screen.blit(over_text, over_rect)
             
@@ -251,7 +251,7 @@ class Game:
             self.screen.blit(exit_text, exit_rect)
         else:
             # Win screen
-            win_text = self.font.  render("🎉 YOU WIN! 🎉", True, COLOR_GREEN)
+            win_text = self.font.render(" YOU WIN! ", True, COLOR_GREEN)
             win_rect = win_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 60))
             self.screen.blit(win_text, win_rect)
             
@@ -268,13 +268,13 @@ class Game:
     def run(self) -> None:
         """Main game loop."""
         print("=" * 50)
-        print("🎮 MAZE GAME WITH COMBAT!")
+        print(" Find the EXIT in this maze! ")
         print("=" * 50)
-        print("🕯️  You have a torch that illuminates 2 tiles in all directions")
-        print("🤖 2 Intelligent Enemies with A* Pathfinding")
-        print("⚔️  Press SPACE to hit adjacent enemies!")
-        print("🎯 Goal: Navigate to EXIT or defeat all enemies")
-        print("🕹️  Controls:")
+        print("You have a torch that illuminates 2 tiles in all directions")
+        print("Intelligent Enemies with A* Pathfinding")
+        print("Press SPACE to hit adjacent enemies!")
+        print("Goal: Navigate to EXIT or defeat all enemies")
+        print("Controls:")
         print("   - Arrow Keys or WASD: Move")
         print("   - SPACE: Hit adjacent enemy")
         print("   - ESC: Quit game")
@@ -286,7 +286,7 @@ class Game:
             self.render()
             self.clock.tick(FPS)
         
-        print("Thanks for playing! 👋")
+        print("Thanks for playing!")
         pygame. quit()
         sys.exit()
 
