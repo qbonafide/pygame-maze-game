@@ -6,7 +6,6 @@ from typing import List, Set, Tuple
 
 
 class Maze:
-    """Generate and manage a maze using Recursive Backtracking algorithm."""
     
     def __init__(self, width: int, height: int):
         """

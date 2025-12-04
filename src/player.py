@@ -7,7 +7,6 @@ from src.maze import Maze
 
 
 class Player:
-    """Represents the player character with sprite animation."""
     
     def __init__(self, x: int, y: int, tile_size: int = 32):
         """

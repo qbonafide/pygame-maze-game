@@ -6,7 +6,6 @@ from typing import List, Tuple, Optional, Set
 
 
 class Node:
-    """Represents a node in the pathfinding grid."""
     
     def __init__(self, position: Tuple[int, int], g_cost: float = 0, h_cost: float = 0):
         """
@@ -29,7 +28,6 @@ class Node:
 
 
 class AStar:
-    """A* pathfinding algorithm implementation."""
     
     def __init__(self, maze):
         """

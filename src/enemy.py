@@ -9,8 +9,7 @@ from src.pathfinding import AStar
 
 
 class Enemy:
-    """Enemy character with A* pathfinding AI, speed control, and hit detection."""
-    
+
     def __init__(self, x: int, y: int, tile_size: int = 32, move_delay: float = 0.5):
         """
         Initialize enemy at given position.
@@ -31,7 +30,7 @@ class Enemy:
         self.move_delay = move_delay
         self.last_move_time = time.time()
         
-        # AI pathfinding
+        # pathfinding
         self.pathfinder: Optional[AStar] = None
         self.path: List[Tuple[int, int]] = []
         self.path_index = 0
@@ -52,7 +51,6 @@ class Enemy:
         self.color = (255, 0, 0)
     
     def _load_sprite(self) -> pygame.Surface:
-        """Load enemy sprite from file."""
         try:
             sprite = pygame.image.load("assets/sprites/enemy.png")
             sprite = pygame.transform.scale(sprite, (self.tile_size, self.tile_size))
@@ -66,7 +64,6 @@ class Enemy:
             return fallback
     
     def set_maze(self, maze: Maze) -> None:
-        """Set maze reference for pathfinding."""
         self.pathfinder = AStar(maze)
     
     def can_see_player(self, player_x: int, player_y: int) -> bool:
@@ -83,10 +80,6 @@ class Enemy:
         return False
     
     def hit(self) -> None:
-        """
-        Enemy gets hit by player.
-        Triggers hit animation and death.
-        """
         if self.is_alive:
             self.is_alive = False
             self.is_hit = True
@@ -94,7 +87,6 @@ class Enemy:
             print("💥 Enemy hit!")
     
     def is_hit_animation_finished(self) -> bool:
-        """Check if hit animation has finished."""
         if self.is_hit:
             current_time = time.time()
             if current_time - self. hit_start_time >= self. hit_animation_time:
@@ -118,7 +110,6 @@ class Enemy:
         self.moves_since_recalc = 0
     
     def update(self, player_x: int, player_y: int, maze: Maze) -> None:
-        """Update enemy AI (called every frame)."""
         if not self.is_alive:
             return
         

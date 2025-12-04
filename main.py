@@ -17,21 +17,19 @@ from src.camera import Camera
 
 
 class Game:
-    """Main game class handling the game loop and logic."""
     
     def __init__(self):
-        """Initialize the game."""
         pygame.init()
-        self.screen = pygame.  display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         pygame.display.set_caption("🔦 Maze Game - Find the Exit!")
         self.clock = pygame.time.Clock()
         self.font = pygame.font.Font(None, 36)
-        self.  small_font = pygame.font.Font(None, 24)
+        self.small_font = pygame.font.Font(None, 24)
         
         # Initialize game components
         self.maze = Maze(MAZE_WIDTH, MAZE_HEIGHT)
         self.player = Player(PLAYER_START_X, PLAYER_START_Y, TILE_SIZE)
-        self. camera = Camera(VISION_RANGE, MAZE_WIDTH, MAZE_HEIGHT)
+        self.camera = Camera(VISION_RANGE, MAZE_WIDTH, MAZE_HEIGHT)
         
         # Load textures
         self.brick_texture = self._load_brick_texture()
