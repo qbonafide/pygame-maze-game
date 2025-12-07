@@ -1,50 +1,54 @@
 """
-Enemy AI module with A* pathfinding, speed control, and hit system. 
+Enemy AI module with multiple pathfinding algorithms, speed control, and hit system.
 """
 from typing import Tuple, Optional, List
 import pygame
 import time
 from src.maze import Maze
-from src.pathfinding import AStar
+from src.pathfinding import AStar, BFS, DFS
 
 
 class Enemy:
 
-    def __init__(self, x: int, y: int, tile_size: int = 32, move_delay: float = 0.5):
+    def __init__(self, x: int, y: int, tile_size: int = 32, move_delay: float = 0.5, 
+                 max_hits: int = 10, algorithm: str = "A*"):
         """
-        Initialize enemy at given position.
+        Initialize enemy at given position. 
         
         Args:
             x: Starting X coordinate
             y: Starting Y coordinate
             tile_size: Size of each tile (default 32px)
-            move_delay: Seconds between each move (default 0.5)
+            move_delay: Seconds between each move
+            max_hits: Not used (kept for compatibility)
+            algorithm: Pathfinding algorithm ("A*", "BFS", "DFS")
         """
         self.x = x
         self.y = y
-        self.tile_size = tile_size
-        self. direction = "down"
+        self. tile_size = tile_size
+        self.direction = "down"
         self.is_alive = True
         
-        # Movement speed control
+        # Movement
         self.move_delay = move_delay
         self.last_move_time = time.time()
         
-        # pathfinding
-        self.pathfinder: Optional[AStar] = None
+        # Pathfinding
+        self.pathfinder: Optional[object] = None
         self.path: List[Tuple[int, int]] = []
-        self.path_index = 0
+        self. path_index = 0
         self.recalc_interval = 1
         self.moves_since_recalc = 0
+        self.algorithm = algorithm
         
-        # Vision/detection
+        # Vision
         self.vision_range = 8
         self.player_detected = False
         
         # Hit animation
-        self.hit_animation_time = 0.2  # seconds
+        self.hit_animation_time = 0.5  # Show death animation for 0.5 seconds
         self.is_hit = False
-        self. hit_start_time = 0
+        self.hit_start_time = 0
         
         # Sprite
         self.sprite = self._load_sprite()
@@ -64,7 +68,15 @@ class Enemy:
             return fallback
     
     def set_maze(self, maze: Maze) -> None:
-        self.pathfinder = AStar(maze)
+        """Set maze and initialize pathfinder based on algorithm."""
+        if self.algorithm == "A*":
+            self.pathfinder = AStar(maze)
+        elif self.algorithm == "BFS":
+            self.pathfinder = BFS(maze)
+        elif self.algorithm == "DFS":
+            self.pathfinder = DFS(maze)
+        else:
+            self.pathfinder = AStar(maze)
     
     def can_see_player(self, player_x: int, player_y: int) -> bool:
         """Check if enemy can see player (within vision range)."""
@@ -72,44 +84,51 @@ class Enemy:
         return distance <= self.vision_range
     
     def _can_move_now(self) -> bool:
-        """Check if enough time has passed for next move based on move_delay."""
+        """Check if enough time has passed for next move."""
         current_time = time.time()
-        if current_time - self. last_move_time >= self. move_delay:
+        if current_time - self. last_move_time >= self.move_delay:
             self.last_move_time = current_time
             return True
         return False
     
-    def hit(self) -> None:
-        if self.is_alive:
-            self.is_alive = False
-            self.is_hit = True
-            self. hit_start_time = time. time()
-            print("💥 Enemy hit!")
+    def hit(self) -> bool:
+        """
+        Register a hit on the enemy.
+        1 HIT = INSTANT DEATH! 
+        Returns: True if hit was successful, False if already dead
+        """
+        if not self.is_alive:
+            return False
+        
+        # LANGSUNG MATI! 
+        self.is_alive = False
+        self.is_hit = True
+        self.hit_start_time = time.time()
+        
+        print(f"💀 Enemy HIT!  DEAD INSTANTLY!")
+        return True
     
     def is_hit_animation_finished(self) -> bool:
+        """Check if hit animation has finished."""
         if self.is_hit:
             current_time = time.time()
             if current_time - self. hit_start_time >= self. hit_animation_time:
+                self.is_hit = False
                 return True
         return False
     
     def reset_position(self, x: int, y: int) -> None:
-        """
-        Reset enemy to new position (respawn).
-        
-        Args:
-            x: New X coordinate
-            y: New Y coordinate
-        """
+        """Reset enemy to new position (respawn)."""
         self.x = x
         self.y = y
         self.is_alive = True
-        self.is_hit = False
+        self. is_hit = False
         self. path = []
         self.path_index = 0
         self.moves_since_recalc = 0
     
     def update(self, player_x: int, player_y: int, maze: Maze) -> None:
+        """Update enemy state."""
         if not self.is_alive:
             return
         
@@ -126,8 +145,7 @@ class Enemy:
             self._patrol(maze)
     
     def _chase_player(self, player_pos: Tuple[int, int], maze: Maze) -> None:
-        """Chase player using A* pathfinding."""
-        # Recalculate path periodically
+        """Chase player using configured pathfinding algorithm."""
         if self.moves_since_recalc >= self.recalc_interval or not self.path:
             if self.pathfinder:
                 self.path = self.pathfinder.find_path((self.x, self.y), player_pos)
@@ -182,19 +200,18 @@ class Enemy:
     
     def render(self, screen: pygame.Surface, tile_size: int) -> None:
         """Render enemy sprite on screen."""
-        if not self.is_alive:
+        if not self. is_alive:
             return
         
         rect = pygame.Rect(self. x * tile_size, self. y * tile_size, tile_size, tile_size)
         
-        # Flashing effect when hit
+        # Flashing effect when hit (death animation)
         if self.is_hit:
             current_time = time.time()
             elapsed = current_time - self.hit_start_time
             
             # Flash between normal and red
             if int(elapsed * 10) % 2 == 0:
-                # Draw hit effect (red overlay)
                 hit_surface = pygame.Surface((tile_size, tile_size))
                 hit_surface.fill((255, 0, 0))
                 screen.blit(hit_surface, rect)

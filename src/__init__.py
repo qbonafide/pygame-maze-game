@@ -1,3 +1,3 @@
 """
-Initialize src package. 
+Game source package. 
 """

@@ -9,7 +9,7 @@ class Camera:
     
     def __init__(self, vision_range: int, maze_width: int, maze_height: int):
         """
-        Initialize camera with vision range.
+        Initialize camera with vision range. 
         
         Args:
             vision_range: How many tiles the torch can illuminate
@@ -43,7 +43,7 @@ class Camera:
                 
                 if distance <= self.vision_range:
                     # Check bounds
-                    if 0 <= nx < self.maze_width and 0 <= ny < self.maze_height:
-                        visible. add((nx, ny))
+                    if 0 <= nx < self.maze_width and 0 <= ny < self. maze_height:
+                        visible.add((nx, ny))
         
         return visible

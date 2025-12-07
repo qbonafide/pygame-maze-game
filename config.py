@@ -30,3 +30,31 @@ COLOR_YELLOW = (255, 255, 0)
 COLOR_GREEN = (0, 255, 0)
 COLOR_RED = (255, 0, 0)
 COLOR_TORCH = (255, 200, 0)
+
+# Difficulty Settings
+DIFFICULTY_SETTINGS = {
+    "easy": {
+        "enemy_count": 2,
+        "enemy_speed": 1.0,
+        "max_hits": 10,
+        "hit_to_score_multiplier": 3
+    },
+    "medium": {
+        "enemy_count": 3,
+        "enemy_speed": 0.75,
+        "max_hits": 7,
+        "hit_to_score_multiplier": 4
+    },
+    "hard": {
+        "enemy_count": 4,
+        "enemy_speed": 0.5,
+        "max_hits": 7,
+        "hit_to_score_multiplier": 5
+    }
+}
+
+# Pathfinding Algorithms
+PATHFINDING_ALGORITHMS = ["A*", "BFS", "DFS"]
+
+# Initial Score
+INITIAL_SCORE = 100

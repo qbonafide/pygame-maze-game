@@ -1,5 +1,5 @@
 """
-Player module for handling player movement and sprite animation. 
+Player module for handling player movement and sprite animation.
 """
 from typing import Tuple, Dict, Optional
 import pygame
@@ -21,7 +21,7 @@ class Player:
         self.y = y
         self.tile_size = tile_size
         self.direction = "down"  # down, up, left, right
-        self.sprites: Dict[str, Optional[pygame.Surface]] = {
+        self. sprites: Dict[str, Optional[pygame.Surface]] = {
             "down": None,
             "up": None,
             "left": None,
@@ -92,7 +92,7 @@ class Player:
     
     def _update_direction(self, dx: int, dy: int) -> None:
         """
-        Update player direction based on movement.
+        Update player direction based on movement. 
         
         Args:
             dx: Change in X
@@ -118,7 +118,7 @@ class Player:
     
     def get_direction(self) -> str:
         """
-        Get player current direction. 
+        Get player current direction.
         
         Returns:
             Direction string: 'up', 'down', 'left', or 'right'
@@ -149,5 +149,5 @@ class Player:
             Rect object with player sprite position
         """
         x = self.x * self.tile_size + screen_offset_x
-        y = self. y * self.tile_size + screen_offset_y
+        y = self.y * self.tile_size + screen_offset_y
         return pygame.Rect(x, y, self.tile_size, self.tile_size)
