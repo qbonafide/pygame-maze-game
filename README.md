@@ -11,20 +11,43 @@ A simple maze game built with Pygame featuring:
 **Maze Generation**
 - Uses Recursive Backtracking algorithm to generate random, solvable mazes
 - Guarantees at least one path from start to exit
+- Maze dimensions: 20x15 tiles
 
-**Fog of War**
-- Torch illuminates up to 2 tiles (Manhattan distance)
+**Torch Visibility System**
+- Player can only see 2 tiles in any direction (Manhattan distance)
 - Creates a challenging exploration experience
-- Player must navigate through darkness
+- Torch illuminates dynamically as player moves
 
-**Gameplay**
+**Difficulty System**
+- Easy: 2 enemies, speed 1. 0, 10 hit attempts
+- Medium: 3 enemies, speed 0.75, 7 hit attempts
+- Hard: 4 enemies, speed 0. 5, 7 hit attempts
+
+**Multiple Enemy Pathfinding Algorithms**
+- A* (A-Star): Optimal pathfinding using heuristics for fastest pursuit
+- BFS (Breadth-First Search): Systematic exploration guaranteeing shortest path
+- DFS (Depth-First Search): Memory-efficient pathfinding
+
+**Scoring System**
+- Base score: 100 points
+- Movement penalty: -1 point per step
+- Hit bonus: Remaining unused hit attempts converted to bonus points
+  - Easy: 3 points per unused hit
+  - Medium: 4 points per unused hit
+  - Hard: 5 points per unused hit
+- Final score minimum: 0 (cannot go negative)
+
+**Combat System**
+- Players have limited hit attempts based on difficulty
+- Each hit kills an enemy instantly
+- Enemies respawn 10 tiles away from player
+- Enemy hit detection is responsive and reliable
+
+**Gameplay Elements**
 - Start at top-left (1, 1)
 - Find the exit at bottom-right (19, 14)
-- Use Arrow Keys or WASD to move
-- Yellow square = Player position
-- Green square = Exit (when visible)
-- White tiles = Paths
-- Dark gray tiles = Walls
+- Defeat or avoid enemies during exploration
+- Manage limited hit attempts strategically
 
 ### Installation
 
@@ -70,8 +93,34 @@ Edit `config.py` to customize:
 
 ### Algorithm Used
 
-**Enemy Chasing Player**: A Star Algorithm
-- Enemy detect player in visin and create shortest path to player using A Star algorithm
+**A* (A-Star) Algorithm**
+- Optimal pathfinding that combines actual distance traveled and heuristic estimate
+- Formula: f(n) = g(n) + h(n), where g is cost from start and h is estimated cost to goal
+- Uses Manhattan distance heuristic for maze navigation
+- Explores only promising nodes, resulting in faster pathfinding
+- Enemy behavior: Appears highly intelligent, pursues player efficiently
+- Performance: Best for real-time gameplay
+- Data structure: Priority queue (heap)
+
+**BFS (Breadth-First Search) Algorithm**
+- Explores all neighbors level by level systematically
+- Guarantees shortest path in unweighted graphs
+- Explores nodes in order of distance from start
+- More nodes explored compared to A* but guaranteed optimal path
+- Enemy behavior: Systematic exploration, fair and predictable
+- Performance: Slower than A* but reliable
+- Data structure: Queue (FIFO)
+- Worst case: Explores all reachable nodes
+
+**DFS (Depth-First Search) Algorithm**
+- Explores deeply along one path before backtracking
+- Does not guarantee shortest path
+- Memory efficient compared to BFS
+- Can find paths faster if target is deep in tree
+- Enemy behavior: May take longer routes, less predictable
+- Performance: Memory efficient, variable speed
+- Data structure: Stack (recursion)
+- Use case: When memory is limited or less optimal paths are acceptable
 
 **Maze Generation**: Recursive Backtracking
 - Carves out paths by randomly choosing unvisited neighbors
