@@ -19,9 +19,9 @@ A simple maze game built with Pygame featuring:
 - Torch illuminates dynamically as player moves
 
 **Difficulty System**
-- Easy: 2 enemies, speed 1. 0, 10 hit attempts
+- Easy: 2 enemies, speed 1.0, 10 hit attempts
 - Medium: 3 enemies, speed 0.75, 7 hit attempts
-- Hard: 4 enemies, speed 0. 5, 7 hit attempts
+- Hard: 4 enemies, speed 0.5, 7 hit attempts
 
 **Multiple Enemy Pathfinding Algorithms**
 - A* (A-Star): Optimal pathfinding using heuristics for fastest pursuit
