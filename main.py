@@ -1,6 +1,4 @@
-"""
-Main game loop and entry point for Pygame Maze Game with difficulty selection and scoring system.
-"""
+# Main game loop and entry point for Pygame Maze Game with difficulty selection and scoring system.
 import pygame
 import sys
 from typing import Tuple
@@ -18,7 +16,7 @@ from src.camera import Camera
 
 
 class GameState:
-    """Enum-like class for game states."""
+    # Enum-like class for game states.
     DIFFICULTY_SELECT = "difficulty_select"
     ALGORITHM_SELECT = "algorithm_select"
     PLAYING = "playing"
@@ -27,14 +25,13 @@ class GameState:
 
 
 class Game:
-    
     def __init__(self):
         pygame.init()
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-        pygame.display.set_caption("🔦 Maze Game - Find the Exit!")
-        self.clock = pygame. time.Clock()
+        pygame.display.set_caption("Maze Game - Find the Exit!")
+        self.clock = pygame.time.Clock()
         self.font = pygame.font.Font(None, 36)
-        self. small_font = pygame.font.Font(None, 24)
+        self.small_font = pygame.font.Font(None, 24)
         self.title_font = pygame.font.Font(None, 48)
         
         # Game state
@@ -42,7 +39,7 @@ class Game:
         self.difficulty = None
         self.algorithm = None
         self.selected_difficulty_index = 0
-        self. selected_algorithm_index = 0
+        self.selected_algorithm_index = 0
         
         # Game components (initialized after difficulty selection)
         self.maze = None
@@ -64,7 +61,6 @@ class Game:
         self.game_over_reason = ""
     
     def _initialize_game(self) -> None:
-        """Initialize game components after difficulty selection."""
         # Initialize game components
         self.maze = Maze(MAZE_WIDTH, MAZE_HEIGHT)
         self.player = Player(PLAYER_START_X, PLAYER_START_Y, TILE_SIZE)
@@ -82,16 +78,16 @@ class Game:
         
         # Initialize score and hit tracking
         self.score = INITIAL_SCORE
-        self. moves_made = 0
+        self.moves_made = 0
         self.enemies_killed = 0
         self.hits_used = 0
         
-        # Set max hits allowed berdasarkan difficulty
+        # Set max hits allowed based on difficulty
         difficulty_config = DIFFICULTY_SETTINGS[self.difficulty]
         self.max_hits_allowed = difficulty_config["max_hits"]
     
     def _spawn_enemies(self) -> list:
-        """Spawn enemies based on difficulty settings."""
+        # Spawn enemies based on difficulty settings
         enemies = []
         difficulty_config = DIFFICULTY_SETTINGS[self.difficulty]
         enemy_count = difficulty_config["enemy_count"]
@@ -105,17 +101,17 @@ class Game:
                 y = random.randint(5, MAZE_HEIGHT - 5)
                 
                 if self.maze.is_path(x, y) and (x, y) != (PLAYER_START_X, PLAYER_START_Y):
-                    enemy = Enemy(x, y, TILE_SIZE, move_delay=enemy_speed, 
+                    enemy = Enemy(x, y, TILE_SIZE, move_delay=enemy_speed,
                                 max_hits=max_hits, algorithm=self.algorithm)
                     enemy.set_maze(self.maze)
                     enemies.append(enemy)
-                    print(f"✓ Enemy {i+1} spawned at ({x}, {y}) - Algorithm: {self.algorithm}")
+                    print(f"Enemy {i+1} spawned at ({x}, {y}) - Algorithm: {self.algorithm}")
                     break
         
         return enemies
     
     def _get_random_spawn_location(self) -> Tuple[int, int]:
-        """Get random valid spawn location for enemy respawn."""
+        # Get random valid spawn location for enemy respawn
         import random
         
         while True:
@@ -131,45 +127,45 @@ class Game:
                 return (x, y)
     
     def _load_brick_texture(self) -> pygame.Surface:
-        """Load brick texture from file."""
+        # Load brick texture from file
         try:
             brick_texture = pygame.image.load("assets/textures/brick.png")
-            brick_texture = pygame.transform. scale(brick_texture, (TILE_SIZE, TILE_SIZE))
-            print("✓ Brick texture loaded successfully!")
+            brick_texture = pygame.transform.scale(brick_texture, (TILE_SIZE, TILE_SIZE))
+            print("Brick texture loaded successfully!")
             return brick_texture
         except pygame.error as e:
-            print(f"⚠ Warning: Could not load brick texture: {e}")
+            print(f"Warning: Could not load brick texture: {e}")
             fallback = pygame.Surface((TILE_SIZE, TILE_SIZE))
             fallback.fill(COLOR_DARK_GRAY)
             return fallback
     
     def _load_path_texture(self) -> pygame.Surface:
-        """Load path texture from file."""
+        # Load path texture from file
         try:
             path_texture = pygame.image.load("assets/textures/background.png")
             path_texture = pygame.transform.scale(path_texture, (TILE_SIZE, TILE_SIZE))
-            print("✓ Path texture loaded successfully!")
+            print("Path texture loaded successfully!")
             return path_texture
         except pygame.error as e:
-            print(f"⚠ Warning: Could not load path texture: {e}")
+            print(f"Warning: Could not load path texture: {e}")
             fallback = pygame.Surface((TILE_SIZE, TILE_SIZE))
             fallback.fill(COLOR_WHITE)
             return fallback
     
     def handle_input(self) -> None:
-        """Handle player input and events."""
+        # Handle player input and events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                self. running = False
-            elif event. type == pygame.KEYDOWN:
+                self.running = False
+            elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    if self.state == GameState. PLAYING:
+                    if self.state == GameState.PLAYING:
                         self.state = GameState.DIFFICULTY_SELECT
                     else:
                         self.running = False
                 elif self.state == GameState.DIFFICULTY_SELECT:
                     self._handle_difficulty_input(event)
-                elif self. state == GameState.ALGORITHM_SELECT:
+                elif self.state == GameState.ALGORITHM_SELECT:
                     self._handle_algorithm_input(event)
                 elif self.state == GameState.PLAYING:
                     self._handle_gameplay_input(event)
@@ -178,11 +174,11 @@ class Game:
                         self.state = GameState.DIFFICULTY_SELECT
     
     def _handle_difficulty_input(self, event) -> None:
-        """Handle input for difficulty selection."""
+        # Handle input for difficulty selection
         difficulties = list(DIFFICULTY_SETTINGS.keys())
         
-        if event.key == pygame. K_UP or event.key == pygame.K_w:
-            self.selected_difficulty_index = (self. selected_difficulty_index - 1) % len(difficulties)
+        if event.key == pygame.K_UP or event.key == pygame.K_w:
+            self.selected_difficulty_index = (self.selected_difficulty_index - 1) % len(difficulties)
         elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
             self.selected_difficulty_index = (self.selected_difficulty_index + 1) % len(difficulties)
         elif event.key == pygame.K_RETURN or event.key == pygame.K_SPACE:
@@ -191,18 +187,18 @@ class Game:
             self.selected_algorithm_index = 0
     
     def _handle_algorithm_input(self, event) -> None:
-        """Handle input for algorithm selection."""
-        if event.key == pygame.K_UP or event. key == pygame.K_w:
+        # Handle input for algorithm selection
+        if event.key == pygame.K_UP or event.key == pygame.K_w:
             self.selected_algorithm_index = (self.selected_algorithm_index - 1) % len(PATHFINDING_ALGORITHMS)
         elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
             self.selected_algorithm_index = (self.selected_algorithm_index + 1) % len(PATHFINDING_ALGORITHMS)
         elif event.key == pygame.K_RETURN or event.key == pygame.K_SPACE:
             self.algorithm = PATHFINDING_ALGORITHMS[self.selected_algorithm_index]
             self._initialize_game()
-            self.state = GameState. PLAYING
+            self.state = GameState.PLAYING
     
     def _handle_gameplay_input(self, event) -> None:
-        """Handle input during gameplay."""
+        # Handle input during gameplay
         if event.key == pygame.K_UP or event.key == pygame.K_w:
             if self.player.move(0, -1, self.maze):
                 self.moves_made += 1
@@ -211,11 +207,11 @@ class Game:
             if self.player.move(0, 1, self.maze):
                 self.moves_made += 1
                 self.score = max(0, self.score - 1)
-        elif event. key == pygame.K_LEFT or event.key == pygame.K_a:
+        elif event.key == pygame.K_LEFT or event.key == pygame.K_a:
             if self.player.move(-1, 0, self.maze):
-                self. moves_made += 1
+                self.moves_made += 1
                 self.score = max(0, self.score - 1)
-        elif event.key == pygame. K_RIGHT or event.key == pygame.K_d:
+        elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
             if self.player.move(1, 0, self.maze):
                 self.moves_made += 1
                 self.score = max(0, self.score - 1)
@@ -227,9 +223,10 @@ class Game:
         Try to hit an enemy adjacent to player.
         Hit works on enemies 1 tile away in any direction.
         """
-        # Check apakah player masih punya hit tersisa
+
+        # Check if player has remaining hits
         if self.hits_used >= self.max_hits_allowed:
-            print(f"❌ Out of hits! You've used {self.hits_used}/{self.max_hits_allowed} hits")
+            print(f"Out of hits! You've used {self.hits_used}/{self.max_hits_allowed} hits")
             return
         
         player_x, player_y = self.player.get_position()
@@ -250,7 +247,7 @@ class Game:
             
             # Check if enemy is adjacent to player
             if enemy_pos in adjacent_positions:
-                # hit() method returns True jika hit berhasil
+                # hit() method returns True if enemy is hit
                 if enemy.hit():
                     self.hits_used += 1
                     if not enemy.is_alive:
@@ -259,7 +256,7 @@ class Game:
                 break
     
     def update(self) -> None:
-        """Update game logic."""
+        # Update game logic
         if self.state != GameState.PLAYING:
             return
         
@@ -276,7 +273,7 @@ class Game:
                     # Respawn enemy
                     new_x, new_y = self._get_random_spawn_location()
                     enemy.reset_position(new_x, new_y)
-                    print(f"✓ Enemy respawned at ({new_x}, {new_y})")
+                    print(f"Enemy respawned at ({new_x}, {new_y})")
                 continue
             
             enemy.update(player_x, player_y, self.maze)
@@ -295,7 +292,7 @@ class Game:
             self.state = GameState.GAME_WON
     
     def _calculate_final_score(self) -> None:
-        """Calculate final score when reaching the exit."""
+        # Calculate final score when reaching the exit
         difficulty_config = DIFFICULTY_SETTINGS[self.difficulty]
         hit_to_score = difficulty_config["hit_to_score_multiplier"]
         
@@ -308,18 +305,18 @@ class Game:
         # Ensure final score tidak minus
         self.score = max(0, self.score)
         
-        print(f"\n📊 FINAL SCORE CALCULATION:")
-        print(f"   Base Score: {INITIAL_SCORE}")
-        print(f"   Score Lost (Movement): -{self.moves_made}")
-        print(f"   Remaining Hits Bonus: +{bonus_score} ({remaining_hits} hits × {hit_to_score} points)")
-        print(f"   FINAL SCORE: {self.score}")
+        print(f"\nFINAL SCORE CALCULATION:")
+        print(f"Base Score: {INITIAL_SCORE}")
+        print(f"Score Lost (Movement): -{self.moves_made}")
+        print(f"Remaining Hits Bonus: +{bonus_score} ({remaining_hits} hits × {hit_to_score} points)")
+        print(f"FINAL SCORE: {self.score}")
     
     def _get_total_remaining_hits(self) -> int:
-        """Calculate remaining hits player can use."""
+        # Calculate remaining hits player can use
         return self.max_hits_allowed - self.hits_used
     
     def render(self) -> None:
-        """Render the game."""
+        # Render the game
         self.screen.fill(COLOR_BLACK)
         
         if self.state == GameState.DIFFICULTY_SELECT:
@@ -336,7 +333,7 @@ class Game:
         pygame. display.flip()
     
     def _render_difficulty_select(self) -> None:
-        """Render difficulty selection screen."""
+        # Render difficulty selection screen
         title = self.title_font.render("SELECT DIFFICULTY", True, COLOR_GREEN)
         title_rect = title.get_rect(center=(SCREEN_WIDTH // 2, 50))
         self.screen. blit(title, title_rect)
@@ -367,7 +364,7 @@ class Game:
         self.screen.blit(instructions, (10, SCREEN_HEIGHT - 30))
     
     def _render_algorithm_select(self) -> None:
-        """Render algorithm selection screen."""
+        # Render algorithm selection screen
         title = self.title_font.render(f"SELECT ALGORITHM", True, COLOR_GREEN)
         title_rect = title.get_rect(center=(SCREEN_WIDTH // 2, 50))
         self.screen.blit(title, title_rect)
@@ -395,11 +392,10 @@ class Game:
         self.screen.blit(instructions, (10, SCREEN_HEIGHT - 30))
     
     def _render_gameplay(self) -> None:
-        """Render gameplay screen."""
         # Get visible tiles from player's torch
         visible_tiles = self.camera.get_visible_tiles(self.player.x, self.player.y)
         
-        # Draw maze - ONLY visible tiles
+        # Draw maze - only visible tiles
         for y in range(MAZE_HEIGHT):
             for x in range(MAZE_WIDTH):
                 if (x, y) in visible_tiles:
@@ -436,17 +432,16 @@ class Game:
         
         # Score display
         score_text = self.font.render(f"Score: {self.score}", True, COLOR_YELLOW)
-        self.screen. blit(score_text, (10, 10))
+        self.screen.blit(score_text, (10, 10))
         
         # Difficulty display
-        difficulty_text = self. small_font.render(f"Difficulty: {self.difficulty. upper()} | Algorithm: {self.algorithm}", 
-                                                 True, COLOR_LIGHT_GRAY)
-        self. screen.blit(difficulty_text, (10, 50))
+        difficulty_text = self.small_font.render(f"Difficulty: {self.difficulty. upper()} | Algorithm: {self.algorithm}",True, COLOR_LIGHT_GRAY)
+        self.screen.blit(difficulty_text, (10, 50))
         
         # Remaining hits counter
         remaining_hits = self._get_total_remaining_hits()
         hits_text = self.small_font.render(f"Remaining Hits: {remaining_hits}/{self.max_hits_allowed}", True, (255, 100, 100))
-        self. screen.blit(hits_text, (10, 80))
+        self.screen.blit(hits_text, (10, 80))
     
     def _render_game_over(self) -> None:
         """Render game over screen."""
@@ -481,9 +476,9 @@ class Game:
         self.screen.blit(exit_text, exit_rect)
     
     def run(self) -> None:
-        """Main game loop."""
+        # Main game loop
         print("=" * 60)
-        print("  🔦 PYGAME MAZE GAME 🔦")
+        print("PYGAME MAZE GAME")
         print("=" * 60)
         print("Features:")
         print("  • Difficulty Selection (Easy, Medium, Hard)")
@@ -504,7 +499,7 @@ class Game:
 
 
 def main():
-    """Entry point for the game."""
+    # Entry point for the game
     game = Game()
     game.run()
 

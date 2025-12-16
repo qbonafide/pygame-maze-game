@@ -1,6 +1,4 @@
-"""
-Maze module for generating random mazes using Recursive Backtracking algorithm.
-"""
+# Maze module for generating random mazes using Recursive Backtracking algorithm.
 import random
 from typing import List, Set, Tuple
 
@@ -11,18 +9,17 @@ class Maze:
         """
         Initialize maze with given dimensions.
         
-        Args:
             width: Maze width in tiles
             height: Maze height in tiles
         """
-        self. width = width
+        self.width = width
         self.height = height
         # 1 = wall, 0 = path
         self.grid: List[List[int]] = [[1 for _ in range(width)] for _ in range(height)]
         self.generate_maze()
     
     def generate_maze(self) -> None:
-        """Generate maze using Recursive Backtracking algorithm."""
+        # Generate maze using Recursive Backtracking algorithm.
         stack: List[Tuple[int, int]] = []
         start_x, start_y = 1, 1
         self.grid[start_y][start_x] = 0  # Mark as path
@@ -57,14 +54,12 @@ class Maze:
         """
         Check if a tile is a wall.
         
-        Args:
             x: X coordinate
             y: Y coordinate
             
-        Returns:
-            True if tile is a wall, False if it's a path
+        Returns True if tile is a wall, False if it's a path
         """
-        if not (0 <= x < self. width and 0 <= y < self.height):
+        if not (0 <= x < self.width and 0 <= y < self.height):
             return True
         return self.grid[y][x] == 1
     
@@ -72,12 +67,10 @@ class Maze:
         """
         Check if a tile is a path.
         
-        Args:
             x: X coordinate
             y: Y coordinate
             
-        Returns:
-            True if tile is a path, False if it's a wall
+        Returns True if tile is a path, False if it's a wall
         """
         if not (0 <= x < self.width and 0 <= y < self.height):
             return False

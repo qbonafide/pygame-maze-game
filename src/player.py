@@ -1,6 +1,5 @@
-"""
-Player module for handling player movement and sprite animation.
-"""
+# Player module for handling player movement and sprite animation.
+
 from typing import Tuple, Dict, Optional
 import pygame
 from src.maze import Maze
@@ -12,7 +11,6 @@ class Player:
         """
         Initialize player at given position.
         
-        Args:
             x: Starting X coordinate
             y: Starting Y coordinate
             tile_size: Size of each tile (default 32px)
@@ -47,19 +45,17 @@ class Player:
                 # Scale to tile size if needed
                 sprite = pygame.transform.scale(sprite, (self.tile_size, self.tile_size))
                 self.sprites[direction] = sprite
-                print(f"✓ Loaded sprite: {direction}")
+                print(f"Loaded sprite: {direction}")
             except pygame.error as e:
-                print(f"⚠ Warning: Could not load sprite {path}: {e}")
-                print(f"  Using placeholder for {direction} direction")
+                print(f"Warning: Could not load sprite {path}: {e}")
+                print(f"Using placeholder for {direction} direction")
                 # Create placeholder sprite
                 self.sprites[direction] = self._create_placeholder_sprite()
     
     def _create_placeholder_sprite(self) -> pygame.Surface:
         """
         Create a placeholder sprite in case sprite assets are not found.
-        
-        Returns:
-            Placeholder surface with a colored square
+        Returns Placeholder surface with a colored square
         """
         surface = pygame.Surface((self.tile_size, self.tile_size))
         surface.fill((255, 255, 0))  # Yellow placeholder
@@ -70,13 +66,11 @@ class Player:
         """
         Move player in given direction with collision detection.
         
-        Args:
             dx: Change in X
             dy: Change in Y
             maze: Maze instance for collision checking
             
-        Returns:
-            True if movement was successful, False if blocked by wall
+        Returns True if movement was successful, False if blocked by wall
         """
         new_x = self.x + dx
         new_y = self.y + dy
@@ -93,8 +87,6 @@ class Player:
     def _update_direction(self, dx: int, dy: int) -> None:
         """
         Update player direction based on movement. 
-        
-        Args:
             dx: Change in X
             dy: Change in Y
         """
@@ -110,27 +102,21 @@ class Player:
     def get_position(self) -> Tuple[int, int]:
         """
         Get player current position.
-        
-        Returns:
-            Tuple of (x, y) coordinates
+        Returns Tuple of (x, y) coordinates
         """
         return (self.x, self. y)
     
     def get_direction(self) -> str:
         """
         Get player current direction.
-        
-        Returns:
-            Direction string: 'up', 'down', 'left', or 'right'
+        Returns Direction string: 'up', 'down', 'left', or 'right'
         """
         return self.direction
     
     def get_sprite(self) -> pygame.Surface:
         """
         Get current sprite based on player direction.
-        
-        Returns:
-            Sprite surface for current direction
+        Returns Sprite surface for current direction
         """
         sprite = self.sprites.get(self.direction)
         if sprite is None:
@@ -140,13 +126,10 @@ class Player:
     def get_sprite_rect(self, screen_offset_x: int = 0, screen_offset_y: int = 0) -> pygame.Rect:
         """
         Get sprite rectangle for rendering.
-        
-        Args:
             screen_offset_x: X offset for screen position (default 0)
             screen_offset_y: Y offset for screen position (default 0)
             
-        Returns:
-            Rect object with player sprite position
+        Returns Rect object with player sprite position
         """
         x = self.x * self.tile_size + screen_offset_x
         y = self.y * self.tile_size + screen_offset_y

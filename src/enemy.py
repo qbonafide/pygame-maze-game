@@ -1,12 +1,9 @@
-"""
-Enemy AI module with multiple pathfinding algorithms, speed control, and hit system.
-"""
+# Enemy module with multiple pathfinding algorithms, speed control, and hit system.
 from typing import Tuple, Optional, List
 import pygame
 import time
 from src.maze import Maze
 from src.pathfinding import AStar, BFS, DFS
-
 
 class Enemy:
 
@@ -15,7 +12,6 @@ class Enemy:
         """
         Initialize enemy at given position. 
         
-        Args:
             x: Starting X coordinate
             y: Starting Y coordinate
             tile_size: Size of each tile (default 32px)
@@ -36,7 +32,7 @@ class Enemy:
         # Pathfinding
         self.pathfinder: Optional[object] = None
         self.path: List[Tuple[int, int]] = []
-        self. path_index = 0
+        self.path_index = 0
         self.recalc_interval = 1
         self.moves_since_recalc = 0
         self.algorithm = algorithm
@@ -58,17 +54,17 @@ class Enemy:
         try:
             sprite = pygame.image.load("assets/sprites/enemy.png")
             sprite = pygame.transform.scale(sprite, (self.tile_size, self.tile_size))
-            print("✓ Enemy sprite loaded successfully!")
+            print("Enemy sprite loaded successfully!")
             return sprite
         except pygame.error as e:
-            print(f"⚠ Warning: Could not load enemy sprite: {e}")
-            fallback = pygame.Surface((self. tile_size, self.tile_size))
+            print(f"Warning: Could not load enemy sprite: {e}")
+            fallback = pygame.Surface((self.tile_size, self.tile_size))
             fallback.fill((255, 0, 0))
             pygame.draw.rect(fallback, (255, 255, 255), fallback.get_rect(), 2)
             return fallback
     
     def set_maze(self, maze: Maze) -> None:
-        """Set maze and initialize pathfinder based on algorithm."""
+        # Set maze and initialize pathfinder based on algorithm.
         if self.algorithm == "A*":
             self.pathfinder = AStar(maze)
         elif self.algorithm == "BFS":
@@ -79,12 +75,12 @@ class Enemy:
             self.pathfinder = AStar(maze)
     
     def can_see_player(self, player_x: int, player_y: int) -> bool:
-        """Check if enemy can see player (within vision range)."""
+        # Check if enemy can see player (within vision range).
         distance = abs(self.x - player_x) + abs(self.y - player_y)
         return distance <= self.vision_range
     
     def _can_move_now(self) -> bool:
-        """Check if enough time has passed for next move."""
+        # Check if enough time has passed for next move.
         current_time = time.time()
         if current_time - self. last_move_time >= self.move_delay:
             self.last_move_time = current_time
@@ -94,22 +90,20 @@ class Enemy:
     def hit(self) -> bool:
         """
         Register a hit on the enemy.
-        1 HIT = INSTANT DEATH! 
-        Returns: True if hit was successful, False if already dead
+        Returns True if hit was successful, False if already dead
         """
         if not self.is_alive:
             return False
-        
-        # LANGSUNG MATI! 
+    
         self.is_alive = False
         self.is_hit = True
         self.hit_start_time = time.time()
         
-        print(f"💀 Enemy HIT!  DEAD INSTANTLY!")
+        print(f"Enemy is dead")
         return True
     
     def is_hit_animation_finished(self) -> bool:
-        """Check if hit animation has finished."""
+        # Check if hit animation has finished.
         if self.is_hit:
             current_time = time.time()
             if current_time - self. hit_start_time >= self. hit_animation_time:
@@ -118,17 +112,17 @@ class Enemy:
         return False
     
     def reset_position(self, x: int, y: int) -> None:
-        """Reset enemy to new position (respawn)."""
+        # Reset enemy to new position (respawn).
         self.x = x
         self.y = y
         self.is_alive = True
-        self. is_hit = False
-        self. path = []
+        self.is_hit = False
+        self.path = []
         self.path_index = 0
         self.moves_since_recalc = 0
     
     def update(self, player_x: int, player_y: int, maze: Maze) -> None:
-        """Update enemy state."""
+        # Update enemy state.
         if not self.is_alive:
             return
         
@@ -145,14 +139,14 @@ class Enemy:
             self._patrol(maze)
     
     def _chase_player(self, player_pos: Tuple[int, int], maze: Maze) -> None:
-        """Chase player using configured pathfinding algorithm."""
+        # Chase player using configured pathfinding algorithm.
         if self.moves_since_recalc >= self.recalc_interval or not self.path:
             if self.pathfinder:
                 self.path = self.pathfinder.find_path((self.x, self.y), player_pos)
-                self. path_index = 0
+                self.path_index = 0
                 self.moves_since_recalc = 0
         
-        # Move ONE step towards next position
+        # Move one step towards next position
         if self.path and self.path_index < len(self.path) - 1:
             next_pos = self.path[self.path_index + 1]
             
@@ -169,7 +163,7 @@ class Enemy:
                 self.moves_since_recalc += 1
     
     def _patrol(self, maze: Maze) -> None:
-        """Patrol randomly when player not detected."""
+        # Patrol randomly when player not detected.
         import random
         
         directions = [(0, -1), (0, 1), (-1, 0), (1, 0)]
@@ -184,7 +178,7 @@ class Enemy:
                 break
     
     def _update_direction(self, dx: int, dy: int) -> None:
-        """Update enemy direction based on movement."""
+        # Update enemy direction based on movement.
         if dy < 0:
             self.direction = "up"
         elif dy > 0:
@@ -195,17 +189,17 @@ class Enemy:
             self.direction = "right"
     
     def get_position(self) -> Tuple[int, int]:
-        """Get enemy current position."""
-        return (self. x, self.y)
+        # Get enemy current position.
+        return (self.x, self.y)
     
     def render(self, screen: pygame.Surface, tile_size: int) -> None:
-        """Render enemy sprite on screen."""
-        if not self. is_alive:
+        # Render enemy sprite on screen.
+        if not self.is_alive:
             return
         
-        rect = pygame.Rect(self. x * tile_size, self. y * tile_size, tile_size, tile_size)
+        rect = pygame.Rect(self.x * tile_size, self.y * tile_size, tile_size, tile_size)
         
-        # Flashing effect when hit (death animation)
+        # Flashing effect when hit
         if self.is_hit:
             current_time = time.time()
             elapsed = current_time - self.hit_start_time

@@ -1,6 +1,5 @@
-"""
-Pathfinding algorithms: A*, BFS, and DFS for maze navigation.
-"""
+# Pathfinding algorithms: A*, BFS, and DFS for maze navigation.
+
 import heapq
 from typing import List, Tuple, Optional, Set
 from collections import deque
@@ -10,32 +9,30 @@ class Node:
     
     def __init__(self, position: Tuple[int, int], g_cost: float = 0, h_cost: float = 0):
         """
-        Initialize a node. 
+        Initialize a node.
         
-        Args:
             position: (x, y) coordinate
             g_cost: Cost from start node
             h_cost: Heuristic cost to goal
         """
-        self. position = position
+        self.position = position
         self.g_cost = g_cost
         self.h_cost = h_cost
         self.f_cost = g_cost + h_cost
         self.parent: Optional['Node'] = None
     
     def __lt__(self, other: 'Node') -> bool:
-        """Compare nodes by f_cost for priority queue."""
+        # Compare nodes by f_cost for priority queue.
         return self.f_cost < other.f_cost
 
 
 class PathFinder:
-    """Base pathfinding class."""
+    # Base pathfinding class.
     
     def __init__(self, maze):
         """
         Initialize pathfinder. 
         
-        Args:
             maze: Maze instance for collision checking
         """
         self.maze = maze
@@ -45,34 +42,31 @@ class PathFinder:
         """
         Manhattan distance heuristic.
         
-        Args:
             pos1: First position (x, y)
             pos2: Second position (x, y)
             
-        Returns:
-            Manhattan distance
+        Returns Manhattan distance
         """
         return abs(pos1[0] - pos2[0]) + abs(pos1[1] - pos2[1])
     
     def find_path(self, start: Tuple[int, int], goal: Tuple[int, int]) -> List[Tuple[int, int]]:
-        """Find path from start to goal."""
+        # Find path from start to goal.
         raise NotImplementedError
 
 
 class AStar(PathFinder):
-    """A* pathfinding algorithm."""
+    # A* pathfinding algorithm.
     
     def find_path(self, start: Tuple[int, int], goal: Tuple[int, int]) -> List[Tuple[int, int]]:
         """
         Find shortest path from start to goal using A*.
         
-        Args:
             start: Starting position (x, y)
             goal: Goal position (x, y)
             
-        Returns:
-            List of positions forming the path, or empty list if no path found
+        Returns List of positions forming the path, or empty list if no path found
         """
+
         # Check if start/goal are valid
         if not self.maze. is_path(start[0], start[1]) or not self.maze.is_path(goal[0], goal[1]):
             return []
@@ -136,11 +130,9 @@ class AStar(PathFinder):
         """
         Reconstruct path from goal node to start.
         
-        Args:
             node: Goal node
             
-        Returns:
-            List of positions from start to goal
+        Returns List of positions from start to goal
         """
         path = []
         current = node
@@ -154,19 +146,18 @@ class AStar(PathFinder):
 
 
 class BFS(PathFinder):
-    """Breadth-First Search pathfinding algorithm."""
+    # Breadth-First Search pathfinding algorithm.
     
     def find_path(self, start: Tuple[int, int], goal: Tuple[int, int]) -> List[Tuple[int, int]]:
         """
         Find shortest path from start to goal using BFS.
         
-        Args:
             start: Starting position (x, y)
             goal: Goal position (x, y)
             
-        Returns:
-            List of positions forming the path, or empty list if no path found
+        Returns List of positions forming the path, or empty list if no path found
         """
+
         # Check if start/goal are valid
         if not self.maze.is_path(start[0], start[1]) or not self.maze.is_path(goal[0], goal[1]):
             return []
@@ -208,12 +199,10 @@ class BFS(PathFinder):
         """
         Reconstruct path using parent dictionary.
         
-        Args:
             parent: Dictionary mapping positions to their parents
             goal: Goal position
             
-        Returns:
-            List of positions from start to goal
+        Returns List of positions from start to goal
         """
         path = []
         current = goal
@@ -227,18 +216,16 @@ class BFS(PathFinder):
 
 
 class DFS(PathFinder):
-    """Depth-First Search pathfinding algorithm."""
+    # Depth-First Search pathfinding algorithm.
     
     def find_path(self, start: Tuple[int, int], goal: Tuple[int, int]) -> List[Tuple[int, int]]:
         """
         Find path from start to goal using DFS. 
         
-        Args:
             start: Starting position (x, y)
             goal: Goal position (x, y)
             
-        Returns:
-            List of positions forming the path, or empty list if no path found
+        Returns List of positions forming the path, or empty list if no path found
         """
         # Check if start/goal are valid
         if not self.maze.is_path(start[0], start[1]) or not self.maze.is_path(goal[0], goal[1]):
@@ -257,14 +244,12 @@ class DFS(PathFinder):
         """
         DFS helper function using recursion.
         
-        Args:
             current: Current position
             goal: Goal position
             visited: Set of visited positions
             path: Current path being built
             
-        Returns:
-            True if goal is found, False otherwise
+        Returns True if goal is found, False otherwise
         """
         visited.add(current)
         path.append(current)

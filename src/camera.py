@@ -1,17 +1,13 @@
-"""
-Camera/Visibility module for handling fog of war with torch visibility.
-"""
+# Camera/Visibility module for handling fog of war with torch visibility.
 from typing import Set, Tuple
 
 
 class Camera:
-    """Handle visibility calculation based on torch range."""
-    
+    # Handle visibility calculation based on torch range
     def __init__(self, vision_range: int, maze_width: int, maze_height: int):
         """
         Initialize camera with vision range. 
         
-        Args:
             vision_range: How many tiles the torch can illuminate
             maze_width: Width of maze
             maze_height: Height of maze
@@ -24,7 +20,6 @@ class Camera:
         """
         Calculate which tiles are visible from player position using Manhattan distance.
         
-        Args:
             player_x: Player X coordinate
             player_y: Player Y coordinate
             
